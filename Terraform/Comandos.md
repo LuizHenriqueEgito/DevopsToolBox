@@ -1,3 +1,112 @@
+# Sistemas de Arquivos
+## 1. Arquivos de código (.tf)
+```txt
+projeto/
+├── main.tf
+├── providers.tf
+├── variables.tf
+├── outputs.tf
+├── terraform.tfvars
+```
+Aqui é onde fazemos a receita de tudo que queremos criar.
+### 1.1 Variables
+No Arquivo `variables.tf`:
+```hcl
+variable "bucket_name" {
+  type = string
+}
+```
+E para usar no arquivo `main.tf`:
+```hcl
+module "s3" {
+  source = "./modules/s3_bucket"
+  bucket_name = var.bucket_name
+}
+```
+
+### 1.2 terraforms.tfvars
+Ele é onde colocamos os **valores reais das variaveis**.
+```hcl
+bucket_name = "nome do bucket que disse que existia em variables.tf (tópico 1.1)"
+```
+
+### 1.3 Outputs
+No arquivo `outputs.tf`
+```hcl
+output "bucket_id" {
+  value = aws_s3_bucket.this.id
+}
+```
+E No arquivo `main.tf` podemos usar:
+```hcl
+output "s3_bucket_id" {
+  value = module.s3.bucket_id
+}
+```
+
+## 2. Cache interno (.terraform)
+```txt
+projeto/
+├── .terraform/
+│   ├── providers/
+│   ├── modules/
+│   └── plugins/
+```
+Aqui é onde ficam os providers baixados (AWS, Azure, GCP, etc, ...), plugins e outros modulos. É como se fosse um `pip` do python.
+
+## 3. Estado readl da infra (terraform.tfstate)
+Arquivo mais importante do terraform, não mexa manualmente nele.
+```txt
+meu-projeto/
+├── terraform.tfstate
+├── terraform.tfstate.backup
+```
+Ele contém o que realmente foi criado na **cloud**, IDs reais e o estado atual da infra.
+
+## 4. Modules
+```txt
+project/
+├── main.tf
+├── variables.tf
+├── outputs.tf
+├── locals.tf
+│
+└── modules/
+    └── s3_bucket/
+        ├── main.tf
+        ├── variables.tf
+        ├── outputs.tf
+```
+Um `module` é um *mini terraform isolado*, é uma **pasta reutilizável de infraestrutura**
+
+### 4.1 Como usar o module
+No `main.tf`
+```hcl
+module "s3" {
+  source = "./modules/s3_bucket"
+  bucket_name = var.bucket_name
+}
+```
+
+## 5. Locals
+Arquivos `locals.tf`
+```hcl
+locals {
+  environment = "dev"
+  project     = "data-lake"
+}
+```
+Podemos usar no `main.tf`:
+```hcl
+resource "aws_s3_bucket" "this" {
+  bucket = "${local.project}-${local.environment}-bucket"
+}
+```
+Quando usar `locals.tf`:
+- Queremos evitar repetição;
+- Queremos montar strings;
+- Queremos derivar valores.
+
 # Comandos Terraforms
 - *funções:* manipulam dados (`merge`, `concat`, etc)
 - *meta-arguments:* controlam recursos (`for_each`)
