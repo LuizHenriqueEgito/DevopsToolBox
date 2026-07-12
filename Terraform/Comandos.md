@@ -107,6 +107,33 @@ Quando usar `locals.tf`:
 - Queremos montar strings;
 - Queremos derivar valores.
 
+# Terraform CLI
+```bash
+# inicia o terraform
+terraform init
+
+# cria sua infra
+terraform apply
+
+# cria sua infra sem pedir confirmação
+terraform apply -auto-approve
+
+# destroi sua infra
+terraform destroy
+
+# destroi sua infra sem pedir confirmação
+terraform destroy -auto-approve
+
+# mostra o plano de execução
+terraform plan
+
+# valida a execução
+terraform validate
+
+# formata o código
+terraform fmt
+```
+
 # Comandos Terraforms
 - *funções:* manipulam dados (`merge`, `concat`, etc)
 - *meta-arguments:* controlam recursos (`for_each`)

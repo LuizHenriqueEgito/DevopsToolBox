@@ -1,0 +1,12 @@
+Modelo ML
+
+FastAPI
+ |
+Docker
+ |
+Kubernetes
+
++
+GPU
++
+monitoramento

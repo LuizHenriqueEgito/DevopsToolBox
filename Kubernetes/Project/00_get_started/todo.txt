@@ -1,0 +1,7 @@
+FastAPI
+ |
+Docker
+ |
+Kubernetes
+ |
+Deploy local
